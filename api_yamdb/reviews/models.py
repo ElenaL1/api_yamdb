@@ -6,7 +6,13 @@ from django.conf import settings
 User = get_user_model()
 
 
+class Title:
+    pass
+
+
 class Comment(models.Model):
+    """Класс комментариев"""
+
     title = models.ForeignKey(
         Title,
         on_delete=models.CASCADE,
