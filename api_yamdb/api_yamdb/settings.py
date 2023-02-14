@@ -24,7 +24,6 @@ INSTALLED_APPS = [
     'rest_framework',
     'djoser',
     'api.apps.ApiConfig',
-    'comments.apps.CommentsConfig',
     'reviews.apps.ReviewsConfig',
 ]
 
