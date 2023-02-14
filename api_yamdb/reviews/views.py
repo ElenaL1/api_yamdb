@@ -14,4 +14,4 @@ def add_comment(request, title_id):
         comment.author = request.user
         comment.post = post
         comment.save()
-        return redirect('posts:post_detail', title_id=title_id)
+        return redirect('titles:title_detail', title_id=title_id)
