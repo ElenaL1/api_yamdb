@@ -7,11 +7,11 @@ from .models import Title
 
 @login_required
 def add_comment(request, title_id):
-    post = get_object_or_404(Title, pk=title_id)
+    title = get_object_or_404(Title, pk=title_id)
     form = CommentForm(request.POST or None)
     if form.is_valid():
         comment = form.save(commit=False)
         comment.author = request.user
-        comment.post = post
+        comment.title = title
         comment.save()
         return redirect('titles:title_detail', title_id=title_id)
