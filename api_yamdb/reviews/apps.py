@@ -5,6 +5,6 @@ class ReviewsConfig(AppConfig):
     name = 'reviews'
 
 
-class ReviewsConfig(AppConfig):
+class TitleConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'reviews'
+    name = 'title'
