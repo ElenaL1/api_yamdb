@@ -1,35 +1,35 @@
-from django.shortcuts import render
+from rest_framework import viewsets
+from rest_framework.pagination import PageNumberPagination
+from rest_framework import filters
 
-from rest_framework import filters, mixins, permissions, viewsets
-from rest_framework.pagination import LimitOffsetPagination
-
-from .permissions import IsAuthorOrReadOnly
+from .permissions import IsAdminOrReadOnly
 from .serializers import (CategorySerializer, GenreSerializer,
                           TitleSerializer)
 
 from .models import Category, Genre, Title
 
 
-class CreateListViewSet(mixins.CreateModelMixin, mixins.ListModelMixin,
-                        viewsets.GenericViewSet):
-    pass
-
-
-class CategoryViewSet(viewsets.ReadOnlyModelViewSet):
+class CategoryViewSet(viewsets.ModelViewSet):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
+    filter_backends = (filters.SearchFilter,)
+    permission_classes = (IsAdminOrReadOnly,)
+    pagination_class = PageNumberPagination
 
 
-class GenreViewSet(viewsets.ReadOnlyModelViewSet):
+class GenreViewSet(viewsets.ModelViewSet):
     queryset = Genre.objects.all()
     serializer_class = GenreSerializer
+    filter_backends = (filters.SearchFilter,)
+    permission_classes = (IsAdminOrReadOnly,)
+    pagination_class = PageNumberPagination
 
 
 class TitleViewSet(viewsets.ModelViewSet):
     queryset = Title.objects.all()
     serializer_class = TitleSerializer
-    # permission_classes = (IsAuthorOrReadOnly,)
-    # pagination_class = LimitOffsetPagination
-
-    # def perform_create(self, serializer):
-    #     serializer.save(author=self.request.user)
+    lookup_field = 'name'
+    filter_backends = (filters.SearchFilter,)
+    search_fields = ('name', )
+    permission_classes = (IsAdminOrReadOnly,)
+    pagination_class = PageNumberPagination
