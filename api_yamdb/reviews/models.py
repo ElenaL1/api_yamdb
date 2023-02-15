@@ -31,7 +31,7 @@ class Title(models.Model):
     year = models.IntegerField('год выпуска')
     genre = models.ManyToManyField(
         Genre,
-        on_delete=models.SET_NULL, 
+        on_delete=models.SET_NULL,
         verbose_name='жанр',
         related_name='title')
     category = models.ForeignKey(
