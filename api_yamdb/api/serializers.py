@@ -6,6 +6,12 @@ from reviews.models import Category, Genre, Title, GenreTitle, User
 
 
 class CategorySerializer(serializers.ModelSerializer):
+    name = serializers.StringRelatedField(read_only=True)
+    slug = serializers.RegexField(
+        regex=r'^[-a-zA-Z0-9_]+$',
+        max_length=50,
+        required=True
+    )
 
     class Meta:
         model = Category
