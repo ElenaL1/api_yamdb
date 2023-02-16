@@ -3,13 +3,14 @@ from django.shortcuts import get_object_or_404
 from rest_framework import permissions, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.filters import SearchFilter
-from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
+from rest_framework.permissions import (IsAuthenticated,
+                                        IsAuthenticatedOrReadOnly,)
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
 
 from .permissions import IsAuthorPermission
-from reviews.models import User, Reviews
+from reviews.models import User, Review
 from .serializers import (GetTokenSerializer, NotAdminSerializer,
                           SignUpSerializer, UsersSerializer, CommentSerializer)
 
@@ -19,16 +20,16 @@ class CommentViewSet(viewsets.ModelViewSet):
     permission_classes = (IsAuthorPermission, IsAuthenticatedOrReadOnly,)
 
     def get_post(self):
-        return get_object_or_404(Reviews, pk=self.kwargs.get('review_id'))
+        return get_object_or_404(Review, pk=self.kwargs.get('review_id'))
 
     def get_queryset(self):
         review_id = self.kwargs.get("review_id")
-        post = get_object_or_404(Reviews, pk=review_id)
+        post = get_object_or_404(Review, pk=review_id)
         return post.comments.all()
 
     def perform_create(self, serializer):
         review_id = self.kwargs.get("review_id")
-        review = get_object_or_404(Reviews, pk=review_id)
+        review = get_object_or_404(Review, pk=review_id)
         serializer.save(author=self.request.user, review=review)
 
 
