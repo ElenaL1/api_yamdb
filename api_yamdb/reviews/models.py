@@ -100,17 +100,17 @@ class Title(models.Model):
 
     name = models.CharField('произведение', max_length=256,)
     year = models.IntegerField('год выпуска')
-    description = models.CharField('описание', max_length=500, required=False)
+    description = models.CharField('описание', max_length=500, blank=True)
     genre = models.ManyToManyField(
         Genre,
-        on_delete=models.SET_NULL,
         verbose_name='жанр',
         related_name='title')
     category = models.ForeignKey(
         Category,
         on_delete=models.SET_NULL,
         verbose_name='категория',
-        related_name='title'
+        related_name='title',
+        null=True
     )
 
     class Meta:
