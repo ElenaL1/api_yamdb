@@ -1,4 +1,6 @@
 from rest_framework.permissions import BasePermission
+from rest_framework import permissions
+
 
 class IsAdminOrReadOnly(BasePermission):
     message = 'Доступ только у администратора.'
