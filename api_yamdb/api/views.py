@@ -15,11 +15,11 @@ from rest_framework.pagination import PageNumberPagination
 
 from .permissions import IsAuthorPermission, IsAdminOrReadOnly
 from .serializers import (GetTokenSerializer, NotAdminSerializer,
-                          SignUpSerializer, UsersSerializer, 
-                          CommentSerializer, CategorySerializer, 
+                          SignUpSerializer, UsersSerializer,
+                          CommentSerializer, CategorySerializer,
                           GenreSerializer, TitleSerializer)
 
-from .models import Category, Genre, Title, User, Review
+from reviews.models import Category, Genre, Title, User, Review
 
 
 class CategoryViewSet(viewsets.ModelViewSet):
