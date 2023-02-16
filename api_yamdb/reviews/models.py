@@ -143,15 +143,16 @@ class GenreTitle(models.Model):
     def __str__(self):
         return f'{self.title} принадлежит жанру {self.genre}'
 
-class Reviews(models.Model):
+
+class Review(models.Model):
     title = models.ForeignKey(
-        Titles,
+        Title,
         on_delete=models.CASCADE,
         related_name='reviews',
-        verbose_name="Комментарий",
+        verbose_name='Комментарий',
     )
     text = models.TextField(
-        verbose_name="Комментарий",
+        verbose_name='Комментарий',
         help_text='Ваш отзыв',
     )
     pub_date = models.DateTimeField(
@@ -166,18 +167,18 @@ class Reviews(models.Model):
     )
 
 
-class Comments(models.Model):
+class Comment(models.Model):
     reviews = models.ForeignKey(
-        Reviews,
+        Review,
         on_delete=models.CASCADE,
         related_name='comments',
-        verbose_name="Комментарий",
+        verbose_name='Комментарий',
     )
     author = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
         related_name='comments',
-        verbose_name="Автор комментария",
+        verbose_name='Автор комментария',
     )
     text = models.TextField(
         verbose_name='Текст комментария',
