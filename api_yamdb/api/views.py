@@ -13,7 +13,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework import filters, viewsets
 from rest_framework.pagination import PageNumberPagination
 
-from .permissions import IsAuthorPermission, IsAdminOrReadOnly
+from .permissions import AdminOnly, IsAuthorPermission, IsAdminOrReadOnly
 from .serializers import (GetTokenSerializer, NotAdminSerializer,
                           SignUpSerializer, UsersSerializer,
                           CommentSerializer, CategorySerializer,
@@ -73,6 +73,7 @@ class CommentViewSet(viewsets.ModelViewSet):
 class UsersViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UsersSerializer
+    permission_classes = (IsAuthenticated, AdminOnly,)
     lookup_field = 'username'
     filter_backends = (SearchFilter, )
     search_fields = ('username', )
@@ -81,7 +82,8 @@ class UsersViewSet(viewsets.ModelViewSet):
         methods=['GET', 'PATCH'],
         detail=False,
         permission_classes=(IsAuthenticated,),
-        url_path='me')
+        url_path='me'
+    )
     def get_current_user_info(self, request):
         serializer = UsersSerializer(request.user)
         if request.method == 'PATCH':
@@ -89,12 +91,14 @@ class UsersViewSet(viewsets.ModelViewSet):
                 serializer = UsersSerializer(
                     request.user,
                     data=request.data,
-                    partial=True)
+                    partial=True
+                )
             else:
                 serializer = NotAdminSerializer(
                     request.user,
                     data=request.data,
-                    partial=True)
+                    partial=True
+                )
             serializer.is_valid(raise_exception=True)
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
