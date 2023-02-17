@@ -48,6 +48,10 @@ class TitleViewSet(viewsets.ModelViewSet):
     pagination_class = PageNumberPagination
 
 
+class ReviewViewSet(viewsets.ModelViewSet):
+    pass
+
+
 class CommentViewSet(viewsets.ModelViewSet):
     serializer_class = CommentSerializer
     permission_classes = (IsAuthorPermission, IsAuthenticatedOrReadOnly,)
