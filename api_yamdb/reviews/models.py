@@ -1,7 +1,11 @@
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser
-
+from django.contrib.auth.tokens import default_token_generator
 from django.db import models
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+
+from .validators import validate_username
 
 USER = 'user'
 ADMIN = 'admin'
@@ -17,6 +21,7 @@ ROLE_CHOICES = [
 class User(AbstractUser):
     username = models.CharField(
         'ник',
+        validators=(validate_username,),
         max_length=150,
         unique=True,
         blank=False,
@@ -35,6 +40,10 @@ class User(AbstractUser):
         choices=ROLE_CHOICES,
         default=USER,
         blank=True
+    )
+    bio = models.TextField(
+        'биография',
+        blank=True,
     )
     first_name = models.CharField(
         'имя',
@@ -73,6 +82,16 @@ class User(AbstractUser):
 
     def __str__(self):
         return self.username
+
+
+@receiver(post_save, sender=User)
+def post_save(sender, instance, created, **kwargs):
+    if created:
+        confirmation_code = default_token_generator.make_token(
+            instance
+        )
+        instance.confirmation_code = confirmation_code
+        instance.save()
 
 
 class Category(models.Model):
