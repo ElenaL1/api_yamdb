@@ -36,6 +36,11 @@ class User(AbstractUser):
         default=USER,
         blank=True
     )
+
+    bio = models.TextField(
+        blank=True,
+        verbose_name='Биография'
+    )
     first_name = models.CharField(
         'имя',
         max_length=150,
