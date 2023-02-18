@@ -13,7 +13,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework import filters, viewsets
 from rest_framework.pagination import PageNumberPagination
 
-from .permissions import AdminOnly, IsAuthorPermission, IsAdminOrReadOnly
+from .permissions import IsAdminOnly, IsAuthorPermission, IsAdminOrReadOnly
 from .serializers import (GetTokenSerializer, NotAdminSerializer,
                           SignUpSerializer, UsersSerializer,
                           CommentSerializer, CategorySerializer,
@@ -73,7 +73,7 @@ class CommentViewSet(viewsets.ModelViewSet):
 class UsersViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UsersSerializer
-    permission_classes = (IsAuthenticated, AdminOnly,)
+    permission_classes = (IsAuthenticated, IsAdminOnly,)
     lookup_field = 'username'
     filter_backends = (SearchFilter, )
     search_fields = ('username', )
