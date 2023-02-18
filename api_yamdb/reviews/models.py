@@ -164,6 +164,42 @@ class GenreTitle(models.Model):
         return f'{self.title} относится к жанру {self.genre}'
 
 
+class Rating_point(models.Model):
+    """Пункты рейтинга"""
+    value = models.SmallIntegerField("Значение", default=0)
+
+    def __str__(self):
+        return f'{self.value}'
+
+    class Meta:
+        verbose_name = 'Пункт рейтинга'
+        ordering = ['-value']    
+
+
+class Raiting(models.Model):
+    """Рейтинг"""
+    title = models.ForeignKey(
+        Title,
+        on_delete=models.CASCADE,
+        related_name='point',
+        verbose_name='Фильм',
+    )
+    username = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='point',
+        verbose_name='Автор'
+    )
+    point = models.ForeignKey(
+        Rating_point,
+        on_delete=models.CASCADE,
+        verbose_name='Пункт'
+    )
+
+    def __str__(self):
+        return f"{self.point} - {self.title}"
+
+
 class Review(models.Model):
     title = models.ForeignKey(
         Title,

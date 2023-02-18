@@ -6,8 +6,9 @@ class IsAdminOnly(BasePermission):
         return (request.user.is_admin or request.user.is_staff)
 
 
+
 class IsAdminOrReadOnly(BasePermission):
-    message = 'Доступ только у администратора.'
+message = 'Доступ только у администратора.'
 
     def has_permission(self, request, view):
         if request.method in SAFE_METHODS:
