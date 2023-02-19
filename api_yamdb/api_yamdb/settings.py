@@ -136,3 +136,5 @@ EMAIL_FILE_PATH = os.path.join(BASE_DIR, 'sent_emails')
 EMAIL_ADMIN = 'Admin@admin.com'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
+
+NUMBER_OF_CHAR = 15
