@@ -1,40 +1,41 @@
 from rest_framework import serializers
 from rest_framework.relations import SlugRelatedField
-# from rest_framework.validators import UniqueTogetherValidator
+from rest_framework.validators import UniqueTogetherValidator, UniqueValidator
 
 from reviews.models import Category, Comment, Genre, Title, User
 
 
 class CategorySerializer(serializers.ModelSerializer):
-    slug = serializers.RegexField(
-        regex=r'^[-a-zA-Z0-9_]+$',
-        max_length=50,
-        required=True
-    )
-
+    
     class Meta:
         model = Category
-        fields = ('id', 'name', 'slug')
+        fields = ('name', 'slug')
 
 
 class GenreSerializer(serializers.ModelSerializer):
-    slug = serializers.RegexField(
-        regex=r'^[-a-zA-Z0-9_]+$',
-        max_length=50,
-        required=True
-    )
-
+    
     class Meta:
         model = Genre
-        fields = ('id', 'name', 'slug')
+        fields = ('name', 'slug')
 
 
 class TitleSerializer(serializers.ModelSerializer):
-    genre = SlugRelatedField(slug_field='name', many=True, read_only=True)
-    category = SlugRelatedField(slug_field='name', read_only=True)
+    # genre = SlugRelatedField(slug_field='name', many=True, read_only=True)
+    # category = SlugRelatedField(slug_field='name', read_only=True)
+    genre = serializers.SlugRelatedField(
+        slug_field='slug',
+        queryset=Genre.objects.all(),
+        many=True
+    )
+    category = serializers.SlugRelatedField(
+        slug_field='slug',
+        queryset=Category.objects.all(),
+        validators=[UniqueValidator(queryset=Category.objects.all())]
+    )
+    description = serializers.StringRelatedField(required=False)
 
     class Meta:
-        fields = ('id', 'name', 'genre', 'category')
+        fields = ('name', 'year', 'description', 'genre', 'category')
         model = Title
 
 
@@ -45,7 +46,7 @@ class CommentSerializer(serializers.ModelSerializer):
     )
 
     class Meta:
-        fields = '__all__'
+        fields = ('id', 'text', 'author', 'created')
         read_only_fields = ('author', 'post')
         model = Comment
 

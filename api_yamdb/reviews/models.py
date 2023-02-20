@@ -4,8 +4,15 @@ from django.contrib.auth.tokens import default_token_generator
 from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from django.core.validators import (
+    MaxValueValidator,
+    MinValueValidator,
+    RegexValidator
+)
+from django.db.models import CheckConstraint, F, Q, UniqueConstraint
 
 from .validators import validate_username
+
 
 USER = 'user'
 ADMIN = 'admin'
@@ -108,7 +115,25 @@ class Genre(models.Model):
     """Класс жанров."""
 
     name = models.CharField('жанр', max_length=256)
-    slug = models.SlugField(unique=True, max_length=50)
+    slug = models.SlugField(
+        unique=True,
+        max_length=50)
+        # validators=[RegexValidator(
+        #     regex=r'^[-a-zA-Z0-9_]+$',
+        #     message='Слаг категории содержит недопустимый символ'
+        # )])
+
+    class Meta:
+        verbose_name = 'жанр'
+        verbose_name_plural = 'жанры'
+        # constraints = [
+        #     UniqueConstraint(
+        #         fields=['title', 'genre'],
+        #         name='unique_title_genre'),
+        #     # CheckConstraint(
+        #     #     check=~Q(user=F('following')),
+        #     #     name='unique_following')
+        # ]
 
     def __str__(self):
         return self.name
@@ -119,11 +144,13 @@ class Title(models.Model):
 
     name = models.CharField('произведение', max_length=256,)
     year = models.IntegerField('год выпуска')
-    description = models.CharField('описание', max_length=500, blank=True)
+    description = models.CharField('описание', max_length=500,
+                                   blank=True)
     genre = models.ManyToManyField(
         Genre,
         verbose_name='жанр',
-        related_name='title')
+        related_name='title',
+        through='GenreTitle')
     category = models.ForeignKey(
         Category,
         on_delete=models.SET_NULL,
@@ -136,6 +163,11 @@ class Title(models.Model):
         ordering = ('-name',)
         verbose_name = 'произведение'
         verbose_name_plural = 'произведение'
+        # constraints = [
+        #     UniqueConstraint(
+        #         fields=['title', 'genre'],
+        #         name='unique_title_genre')
+        # ]
 
     def __str__(self):
         return self.name
