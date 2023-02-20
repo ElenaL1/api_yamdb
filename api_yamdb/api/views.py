@@ -28,6 +28,7 @@ class CategoryViewSet(viewsets.ModelViewSet):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
     filter_backends = (filters.SearchFilter,)
+    search_fields = ('name', )
     permission_classes = (IsAdminOrReadOnly,)
     pagination_class = PageNumberPagination
 
@@ -36,6 +37,7 @@ class GenreViewSet(viewsets.ModelViewSet):
     queryset = Genre.objects.all()
     serializer_class = GenreSerializer
     filter_backends = (filters.SearchFilter,)
+    search_fields = ('name', )
     permission_classes = (IsAdminOrReadOnly,)
     pagination_class = PageNumberPagination
 
@@ -50,7 +52,7 @@ class TitleViewSet(viewsets.ModelViewSet):
     permission_classes = (IsAdminOrReadOnly,)
     pagination_class = PageNumberPagination
 
-
+    
 class ReviewViewSet(viewsets.ModelViewSet):
     serializer_class = ReviewSerializer
     permission_classes = [AdminModeratorAuthorPermission]

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Category, Genre, Title, User, Review, Comment
+from .models import Category, Genre, Title, Review, Comment, User
 
 
 @admin.register(User)
@@ -18,20 +18,8 @@ class UserAdmin(admin.ModelAdmin):
     empty_value_display = '-пусто-'
 
 
-@admin.register(Title)
-class TitleAdmin(admin.ModelAdmin):
-    pass
-
-
-@admin.register(Genre)
-class GenreAdmin(admin.ModelAdmin):
-    pass
-
-
-@admin.register(Category)
-class GenreAdmin(admin.ModelAdmin):
-    pass
-
-
-admin.site.register(Comment)
+admin.site.register(Title)
+admin.site.register(Genre)
+admin.site.register(Category)
 admin.site.register(Review)
+admin.site.register(Comment)
