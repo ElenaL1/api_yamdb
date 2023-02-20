@@ -1,3 +1,4 @@
+from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import EmailMessage
 from django.db.models import Avg
 from django.shortcuts import get_object_or_404
@@ -175,6 +176,17 @@ class APISignup(APIView):
 
     def post(self, request):
         serializer = SignUpSerializer(data=request.data)
+        if User.objects.filter(username=request.data.get('username'),
+                               email=request.data.get('email')).exists():
+            user, created = User.objects.get_or_create(
+                username=request.data.get('username')
+            )
+            if created is False:
+                confirmation_code = default_token_generator.make_token(user)
+                user.confirmation_code = confirmation_code
+                user.save()
+                return Response('Токен обновлен', status=status.HTTP_200_OK)
+
         serializer.is_valid(raise_exception=True)
         user = serializer.save()
         email_body = (
