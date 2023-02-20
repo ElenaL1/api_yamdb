@@ -73,6 +73,7 @@ class NotAdminSerializer(serializers.ModelSerializer):
             'email',
             'first_name',
             'last_name',
+            'bio',
             'role'
         )
         read_only_fields = ('role',)
