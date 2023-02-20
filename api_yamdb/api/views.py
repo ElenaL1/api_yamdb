@@ -19,7 +19,8 @@ from .permissions import (IsAdminOnly,
 from .serializers import (GetTokenSerializer, NotAdminSerializer,
                           SignUpSerializer, UsersSerializer,
                           CommentSerializer, CategorySerializer,
-                          GenreSerializer, TitleSerializer, ReviewSerializer,)
+                          GenreSerializer, TitleSerializer, ReviewSerializer,
+                          RevScoreTitleSerializer)
 
 from reviews.models import Category, Genre, Title, User, Review
 
@@ -44,15 +45,20 @@ class GenreViewSet(viewsets.ModelViewSet):
 
 class TitleViewSet(viewsets.ModelViewSet):
     queryset = Title.objects.all().annotate(
-        Avg("reviews__score")).order_by("name")
+        Avg("reviews__score")
+    ).order_by("name")
     serializer_class = TitleSerializer
-    lookup_field = 'name'
+    permission_classes = (IsAdminOrReadOnly,)
     filter_backends = (filters.SearchFilter,)
     search_fields = ('name', )
-    permission_classes = (IsAdminOrReadOnly,)
     pagination_class = PageNumberPagination
 
-    
+    def get_serializer_class(self):
+        if self.action in ("retrieve", "list"):
+            return RevScoreTitleSerializer
+        return TitleSerializer
+
+
 class ReviewViewSet(viewsets.ModelViewSet):
     serializer_class = ReviewSerializer
     permission_classes = [AdminModeratorAuthorPermission]
