@@ -108,6 +108,10 @@ class Category(models.Model):
     name = models.CharField('категория', max_length=256)
     slug = models.SlugField(unique=True, max_length=50)
 
+    class Meta:
+        verbose_name = 'категория'
+        verbose_name_plural = 'категории'
+
     def __str__(self):
         return self.name
 
@@ -144,8 +148,14 @@ class Title(models.Model):
     """Класс произведений."""
 
     name = models.CharField('произведение', max_length=256,)
-    year = models.IntegerField('год выпуска', validators=[validate_year])
-    description = models.CharField('описание', max_length=500, blank=True)
+    year = models.IntegerField('год выпуска', validators=(validate_year,))
+    description = models.CharField('описание', max_length=500,
+                                   null=True, blank=True)
+    # genre = models.ManyToManyField(
+    #     Genre,
+    #     verbose_name='жанр',
+    #     related_name='title'
+    # )
     genre = models.ManyToManyField(
         Genre,
         verbose_name='жанр',
@@ -158,11 +168,12 @@ class Title(models.Model):
         related_name='title',
         null=True
     )
-    rating = models.IntegerField(
-        verbose_name='Рейтинг',
-        null=True,
-        default=None
-    )
+    # rating = models.IntegerField(
+    #     verbose_name='Рейтинг',
+    #     null=True,
+    #     default=None,
+    #     blank=True
+    # )
 
     class Meta:
         ordering = ('-name',)
@@ -176,29 +187,6 @@ class Title(models.Model):
 
     def __str__(self):
         return self.name
-
-
-class GenreTitle(models.Model):
-    """Вспомогательный класс, связывающий жанры и произведения."""
-
-    genre = models.ForeignKey(
-        Genre,
-        on_delete=models.CASCADE,
-        verbose_name='жанр'
-    )
-    title = models.ForeignKey(
-        Title,
-        on_delete=models.CASCADE,
-        verbose_name='произведение'
-    )
-
-    class Meta:
-        ordering = ('id',)
-        verbose_name = 'соответствие жанра и произведения'
-        verbose_name_plural = 'таблица соответствия жанров и произведений'
-
-    def __str__(self):
-        return f'{self.title} относится к жанру {self.genre}'
 
 
 class Review(models.Model):
@@ -233,6 +221,7 @@ class Review(models.Model):
 
     class Meta:
         verbose_name = 'Отзыв'
+        verbose_name_plural = 'Отзывы'
         ordering = ['-pub_date']
         constraints = [
             models.UniqueConstraint(
@@ -270,7 +259,31 @@ class Comment(models.Model):
 
     class Meta:
         verbose_name = 'Комментарий'
+        verbose_name_plural = 'Комментарии'
         ordering = ['-pub_date']
 
     def __str__(self):
         return self.text[settings.NUMBER_OF_CHAR]
+
+
+class GenreTitle(models.Model):
+    """Вспомогательный класс, связывающий жанры и произведения."""
+
+    genre = models.ForeignKey(
+        Genre,
+        on_delete=models.CASCADE,
+        verbose_name='жанр'
+    )
+    title = models.ForeignKey(
+        Title,
+        on_delete=models.CASCADE,
+        verbose_name='произведение'
+    )
+
+    class Meta:
+        ordering = ('id',)
+        verbose_name = 'соответствие жанра и произведения'
+        verbose_name_plural = 'таблица соответствия жанров и произведений'
+
+    def __str__(self):
+        return f'{self.title} относится к жанру {self.genre}'

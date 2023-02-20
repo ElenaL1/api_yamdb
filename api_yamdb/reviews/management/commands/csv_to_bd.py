@@ -7,7 +7,8 @@ from sqlalchemy import create_engine
 
 from api_yamdb.settings import CSV_FILES_DIR
 from reviews.models import (Category, Comment, Genre,
-                            GenreTitle, Title, Review, User)
+                            GenreTitle, Title, Review)
+# User
 
 FILES_MODELS = {
     'category.csv': Category,
@@ -16,7 +17,7 @@ FILES_MODELS = {
     'genre.csv': Genre,
     'review.csv': Review,
     'titles.csv': Title,
-    'users.csv': User,
+    # 'users.csv': User,
 }
 
 
@@ -29,9 +30,8 @@ class Command(BaseCommand):
             data = pd.read_csv(csv_path)
             if csv_file == 'titles.csv':
                 data.insert(2, 'description', None)
-            # data.insert(3, 'genre', None)
+                data.rename(columns={'category': 'category_id'}, inplace=True)
             engine = create_engine('sqlite:///db.sqlite3')
             data.to_sql(model._meta.db_table, if_exists='replace',
                         con=engine, index=False)
-            # genre= GenreTitle.objects.all()
         print('Данные из csv-файлов записаны в базу')

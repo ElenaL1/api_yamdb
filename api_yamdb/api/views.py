@@ -52,7 +52,7 @@ class TitleViewSet(viewsets.ModelViewSet):
     permission_classes = (IsAdminOrReadOnly,)
     pagination_class = PageNumberPagination
 
-    
+
 class ReviewViewSet(viewsets.ModelViewSet):
     serializer_class = ReviewSerializer
     permission_classes = [AdminModeratorAuthorPermission]
@@ -90,6 +90,7 @@ class UsersViewSet(viewsets.ModelViewSet):
     lookup_field = 'username'
     filter_backends = (SearchFilter, )
     search_fields = ('username', )
+    http_method_names = ('get', 'post', 'patch', 'delete')
 
     @action(
         methods=['GET', 'PATCH'],

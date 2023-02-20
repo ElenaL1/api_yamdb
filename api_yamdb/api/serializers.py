@@ -32,22 +32,47 @@ class GenreSerializer(serializers.ModelSerializer):
         fields = ('name', 'slug')
 
 
+class TitleCreateSerializer(serializers.ModelSerializer):
+    category = serializers.SlugRelatedField(
+        queryset=Category.objects.all(),
+        slug_field='slug'
+    )
+    genre = serializers.SlugRelatedField(
+        queryset=Genre.objects.all(),
+        slug_field='slug',
+        many=True
+    )
+
+    class Meta:
+        fields = '__all__'
+        model = Title
+
+    # def validate(self, data):
+    #     """Название произведения не может быть длиннее 256 символов."""
+    #     if self.request.method == 'POST':
+    #         if len(self.name) >= 256:
+    #             raise serializers.ValidationError(
+    #                 'Название произведения не может быть длиннее 256 символов.'
+    #             )
+    #     return data
+
+
 class TitleSerializer(serializers.ModelSerializer):
+    # genre = GenreSerializer(many=True, read_only=True)
+    rating = serializers.IntegerField(
+        required=False
+    )
     # genre = SlugRelatedField(slug_field='name', many=True, read_only=True)
-    # category = SlugRelatedField(slug_field='name', read_only=True)
+    category = SlugRelatedField(slug_field='slug', read_only=True)
     genre = serializers.SlugRelatedField(
         slug_field='slug',
         queryset=Genre.objects.all(),
         many=True
     )
-    category = serializers.SlugRelatedField(
-        slug_field='slug',
-        queryset=Category.objects.all(),
-        validators=[UniqueValidator(queryset=Category.objects.all())]
-    )
 
     class Meta:
-        fields = ('id', 'name', 'year', 'description', 'genre', 'category')
+        fields = ('id', 'name', 'year', 'description',
+                  'genre', 'category', 'rating')
         model = Title
 
 
