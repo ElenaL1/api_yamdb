@@ -1,8 +1,7 @@
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 from rest_framework.generics import get_object_or_404
-from rest_framework.relations import SlugRelatedField
-from rest_framework.validators import UniqueTogetherValidator, UniqueValidator
+from rest_framework.validators import UniqueValidator
 
 from reviews.models import (Category, Comment, Genre,
                             Title, User, Review)
@@ -12,7 +11,8 @@ class CategorySerializer(serializers.ModelSerializer):
     slug = serializers.RegexField(
         regex=r'^[-a-zA-Z0-9_]+$',
         max_length=50,
-        required=True
+        required=True,
+        validators=[UniqueValidator(queryset=Category.objects.all())]
     )
 
     class Meta:
@@ -24,7 +24,8 @@ class GenreSerializer(serializers.ModelSerializer):
     slug = serializers.RegexField(
         regex=r'^[-a-zA-Z0-9_]+$',
         max_length=50,
-        required=True
+        required=True,
+        validators=[UniqueValidator(queryset=Genre.objects.all())]
     )
 
     class Meta:
@@ -47,23 +48,11 @@ class TitleCreateSerializer(serializers.ModelSerializer):
         fields = '__all__'
         model = Title
 
-    # def validate(self, data):
-    #     """Название произведения не может быть длиннее 256 символов."""
-    #     if self.request.method == 'POST':
-    #         if len(self.name) >= 256:
-    #             raise serializers.ValidationError(
-    #                 'Название произведения не может быть длиннее 256 символов.'
-    #             )
-    #     return data
-
-
+    
 class TitleSerializer(serializers.ModelSerializer):
-    # genre = GenreSerializer(many=True, read_only=True)
     rating = serializers.IntegerField(
         required=False
     )
-    # genre = SlugRelatedField(slug_field='name', many=True, read_only=True)
-    # category = SlugRelatedField(slug_field='slug', read_only=True)
     genre = serializers.SlugRelatedField(
         slug_field='slug',
         queryset=Genre.objects.all(),
@@ -72,7 +61,6 @@ class TitleSerializer(serializers.ModelSerializer):
     category = serializers.SlugRelatedField(
         slug_field='slug',
         queryset=Category.objects.all(),
-        # validators=[UniqueValidator(queryset=Category.objects.all())]
     )
 
     class Meta:
