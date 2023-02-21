@@ -1,14 +1,12 @@
 # Файл вызывается командой python manage.py csv_to_bd
-from django.core.management.base import BaseCommand
+import os
 
 import pandas as pd
-import os
+from django.core.management.base import BaseCommand
 from sqlalchemy import create_engine
 
+from reviews.models import Category, Comment, Genre, GenreTitle, Review, Title
 from api_yamdb.settings import CSV_FILES_DIR
-from reviews.models import (Category, Comment, Genre,
-                            GenreTitle, Title, Review)
-# User
 
 FILES_MODELS = {
     'category.csv': Category,
@@ -17,7 +15,6 @@ FILES_MODELS = {
     'genre.csv': Genre,
     'review.csv': Review,
     'titles.csv': Title,
-    # 'users.csv': User,
 }
 
 

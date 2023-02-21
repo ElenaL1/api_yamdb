@@ -1,7 +1,5 @@
-import re
-
-# from django.utils import timezone
 import datetime as dt
+import re
 
 from django.core.exceptions import ValidationError
 
@@ -20,7 +18,6 @@ def validate_username(value):
 
 
 def validate_year(value):
-    # if value > timezone.now().year:
     if value > dt.datetime.now().year:
         raise ValidationError(
             ('Год %(value)s больше текущего!'),

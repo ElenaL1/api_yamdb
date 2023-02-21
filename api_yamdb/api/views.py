@@ -2,37 +2,26 @@ from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import EmailMessage
 from django.db.models import Avg
 from django.shortcuts import get_object_or_404
-
-from rest_framework import permissions, status, viewsets
-from rest_framework.decorators import action
 from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import filters, permissions, status, viewsets
+from rest_framework.decorators import action
 from rest_framework.filters import SearchFilter
+from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
-# from rest_framework.mixins import DestroyModelMixin
 from rest_framework_simplejwt.tokens import RefreshToken
+from reviews.models import Category, Genre, Review, Title, User
 
-from rest_framework import filters, viewsets
-from .mixins import CreateListDestroyViewSet
-from rest_framework.pagination import PageNumberPagination
-
-from .permissions import (IsAdminOnly,
-                          AdminModeratorAuthorPermission,
-                          IsAdminOrReadOnly)
-from .serializers import (GetTokenSerializer, NotAdminSerializer,
-                          SignUpSerializer, UsersSerializer,
-                          CommentSerializer, CategorySerializer,
-                          GenreSerializer, TitleSerializer, ReviewSerializer,
-                          RevScoreTitleSerializer)
 from .filters import TitlesFilter
-from reviews.models import Category, Genre, Title, User, Review
-
-
-# class CategoryDelViewSet(DestroyModelMixin):
-#     queryset = Category.objects.all()
-#     serializer_class = CategorySerializer
-#     permission_classes = (IsAdminOnly,)
+from .mixins import CreateListDestroyViewSet
+from .permissions import (AdminModeratorAuthorPermission, IsAdminOnly,
+                          IsAdminOrReadOnly)
+from .serializers import (CategorySerializer, CommentSerializer,
+                          GenreSerializer, GetTokenSerializer,
+                          NotAdminSerializer, ReviewSerializer,
+                          RevScoreTitleSerializer, SignUpSerializer,
+                          TitleSerializer, UsersSerializer)
 
 
 class CategoryViewSet(CreateListDestroyViewSet):
