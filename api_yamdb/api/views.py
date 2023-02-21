@@ -14,6 +14,7 @@ from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
 
 from rest_framework import filters, viewsets
+from .mixins import CreateListDestroyViewSet
 from rest_framework.pagination import PageNumberPagination
 
 from .permissions import (IsAdminOnly,
@@ -34,22 +35,24 @@ from reviews.models import Category, Genre, Title, User, Review
 #     permission_classes = (IsAdminOnly,)
 
 
-class CategoryViewSet(viewsets.ModelViewSet):
+class CategoryViewSet(CreateListDestroyViewSet):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
     filter_backends = (filters.SearchFilter,)
     search_fields = ('name', )
     permission_classes = (IsAdminOrReadOnly,)
     pagination_class = PageNumberPagination
+    lookup_field = 'slug'
 
 
-class GenreViewSet(viewsets.ModelViewSet):
+class GenreViewSet(CreateListDestroyViewSet):
     queryset = Genre.objects.all()
     serializer_class = GenreSerializer
     filter_backends = (filters.SearchFilter,)
     search_fields = ('name', )
     permission_classes = (IsAdminOrReadOnly,)
     pagination_class = PageNumberPagination
+    lookup_field = 'slug'
 
 
 class TitleViewSet(viewsets.ModelViewSet):
