@@ -3,8 +3,7 @@ from rest_framework.exceptions import ValidationError
 from rest_framework.generics import get_object_or_404
 from rest_framework.validators import UniqueValidator
 
-from reviews.models import (Category, Comment, Genre,
-                            Title, User, Review)
+from reviews.models import Category, Comment, Genre, Review, Title, User
 
 
 class CategorySerializer(serializers.ModelSerializer):
@@ -48,7 +47,7 @@ class TitleCreateSerializer(serializers.ModelSerializer):
         fields = '__all__'
         model = Title
 
-    
+
 class TitleSerializer(serializers.ModelSerializer):
     rating = serializers.IntegerField(
         required=False
