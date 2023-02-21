@@ -5,10 +5,12 @@ from django.shortcuts import get_object_or_404
 
 from rest_framework import permissions, status, viewsets
 from rest_framework.decorators import action
+from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
+# from rest_framework.mixins import DestroyModelMixin
 from rest_framework_simplejwt.tokens import RefreshToken
 
 from rest_framework import filters, viewsets
@@ -22,8 +24,14 @@ from .serializers import (GetTokenSerializer, NotAdminSerializer,
                           CommentSerializer, CategorySerializer,
                           GenreSerializer, TitleSerializer, ReviewSerializer,
                           RevScoreTitleSerializer)
-
+from .filters import TitlesFilter
 from reviews.models import Category, Genre, Title, User, Review
+
+
+# class CategoryDelViewSet(DestroyModelMixin):
+#     queryset = Category.objects.all()
+#     serializer_class = CategorySerializer
+#     permission_classes = (IsAdminOnly,)
 
 
 class CategoryViewSet(viewsets.ModelViewSet):
@@ -48,10 +56,10 @@ class TitleViewSet(viewsets.ModelViewSet):
     queryset = Title.objects.all().annotate(
         Avg("reviews__score")
     ).order_by("name")
-#     serializer_class = TitleSerializer
     permission_classes = (IsAdminOrReadOnly,)
-    filter_backends = (filters.SearchFilter,)
-    search_fields = ('name', )
+    filter_backends = (DjangoFilterBackend, filters.SearchFilter,)
+    filterset_class = TitlesFilter
+    search_fields = ('name',)
     pagination_class = PageNumberPagination
 
     def get_serializer_class(self):
