@@ -1,4 +1,6 @@
 # API для Yamdb
+Проект API для Yamdb является учебным, в рамках курса Яндекс "Python-разработчик"
+
 ### Описание проекта API для Yamdb
 
 Проект YaMDb собирает отзывы пользователей на различные произведения.
@@ -30,17 +32,21 @@ cd api_yamdb
 Cоздать и активировать виртуальное окружение:
 
 ```
-py -3.9 -m venv env
+py -3.9 -m venv env - создание виртуального окружения(Windows)
+python3 -m venv venv - создание виртуального окружения(linux, macOS)
+
 ```
 
 ```
-source env/bin/activate
+source env/bin/activate - активация виртуального окружения(Windows)
+source venv/bin/activate - активация виртуального окружения(linux, macOS)
 ```
 
 Установить зависимости из файла requirements.txt:
 
 ```
-python -m pip install --upgrade pip
+python -m pip install --upgrade pip - Обновление менеджера пвкетов PIP(Windows)
+python3 -m pip install --upgrade pip - Обновление менеджера пвкетов PIP(linux, macOS)
 ```
 
 ```
@@ -50,19 +56,22 @@ pip install -r requirements.txt
 Выполнить миграции:
 
 ```
-python manage.py migrate
+python manage.py migrate (Windows)
+python3 manage.py migrate (linux, macOS)
 ```
 
 Импортировать базу данных:
 
 ```
-python manage.py csv_to_bd
+python manage.py csv_to_bd (Windows)
+python3 manage.py csv_to_bd (linux, macOS)
 ```
 
 Запустить проект:
 
 ```
-python manage.py runserver
+python manage.py runserver - Запуск локального сервера(Windows)
+python3 manage.py runserver - Запуск локального сервера(linux, macOS)
 ```
 
 ### Примеры запросов
