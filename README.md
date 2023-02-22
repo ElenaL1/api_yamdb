@@ -1,5 +1,6 @@
 # API для Yamdb
 Проект API для Yamdb является учебным, в рамках курса Яндекс "Python-разработчик"
+Участники проекта: Андрей Фарафонов, Андрей Холодов, Елена Ламберт
 
 ### Описание проекта API для Yamdb
 
@@ -73,7 +74,49 @@ python manage.py runserver - Запуск локального сервера(Wi
 python3 manage.py runserver - Запуск локального сервера(linux, macOS)
 ```
 
+Создать суперпользователя для управления узлом администрирования:
+
+```
+python manage.py createsuperuser - (Windows)
+python3 manage.py createsuperuser - (linux, macOS)
+```
+
 ### Примеры запросов
+Пример POST-запроса на регистрацию нового пользователя: POST .../api/v1/auth/signup/
+```
+{
+"email": "user@example.com",
+"username": "string"
+}
+```
+Пример ответа на GET-запрос на получение списка всех произведений: GET .../api/v1/titles/
+```
+{
+"count": 0,
+"next": "string",
+"previous": "string",
+"results": [
+{
+"id": 0,
+"name": "string",
+"year": 0,
+"rating": 0,
+"description": "string",
+"genre": [
+{
+"name": "string",
+"slug": "string"
+}
+],
+"category": {
+"name": "string",
+"slug": "string"
+}
+}
+]
+}
+```
+
 
 Ресурсы API YaMDb
 - auth: аутентификация.
@@ -83,6 +126,8 @@ python3 manage.py runserver - Запуск локального сервера(l
 - genres: жанры произведений. Одно произведение может быть привязано к нескольким жанрам.
 - reviews: отзывы на произведения. Отзыв привязан к определённому произведению.
 - comments: комментарии к отзывам. Комментарий привязан к определённому отзыву.
+
+
 
 Более подробно информацию об эндпоинтах и примерах запросов и ответов можно посмотреть в 
 ```

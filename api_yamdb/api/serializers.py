@@ -7,11 +7,10 @@ from reviews.models import Category, Comment, Genre, Review, Title, User
 
 
 class CategorySerializer(serializers.ModelSerializer):
-    slug = serializers.RegexField(
-        regex=r'^[-a-zA-Z0-9_]+$',
+    slug = serializers.SlugField(
         max_length=50,
         required=True,
-        validators=[UniqueValidator(queryset=Category.objects.all())]
+        validators=(UniqueValidator(queryset=Category.objects.all()),)
     )
 
     class Meta:
@@ -20,11 +19,10 @@ class CategorySerializer(serializers.ModelSerializer):
 
 
 class GenreSerializer(serializers.ModelSerializer):
-    slug = serializers.RegexField(
-        regex=r'^[-a-zA-Z0-9_]+$',
+    slug = serializers.SlugField(
         max_length=50,
         required=True,
-        validators=[UniqueValidator(queryset=Genre.objects.all())]
+        validators=(UniqueValidator(queryset=Genre.objects.all()),)
     )
 
     class Meta:
@@ -44,7 +42,8 @@ class TitleCreateSerializer(serializers.ModelSerializer):
     )
 
     class Meta:
-        fields = '__all__'
+        fields = ('id', 'name', 'year', 'rating',
+                  'description', 'genre', 'category')
         model = Title
 
 
@@ -122,10 +121,6 @@ class SignUpSerializer(serializers.ModelSerializer):
 
 
 class ReviewSerializer(serializers.ModelSerializer):
-    title = serializers.SlugRelatedField(
-        slug_field='name',
-        read_only=True,
-    )
     author = serializers.SlugRelatedField(
         default=serializers.CurrentUserDefault(),
         slug_field='username',
@@ -145,14 +140,10 @@ class ReviewSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Review
-        fields = '__all__'
+        fields = ('id', 'text', 'author', 'score', 'pub_date')
 
 
 class CommentSerializer(serializers.ModelSerializer):
-    review = serializers.SlugRelatedField(
-        slug_field='text',
-        read_only=True
-    )
     author = serializers.SlugRelatedField(
         slug_field='username',
         read_only=True
@@ -160,7 +151,7 @@ class CommentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Comment
-        fields = '__all__'
+        fields = ('id', 'text', 'author', 'pub_date')
 
 
 class RevScoreTitleSerializer(serializers.ModelSerializer):
