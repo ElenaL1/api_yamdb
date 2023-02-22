@@ -11,23 +11,29 @@ from .validators import validate_username, validate_year
 USER = 'user'
 ADMIN = 'admin'
 MODERATOR = 'moderator'
+MINVALUE = 1
+MAXVALUE = 10
 
 ROLE_CHOICES = [
-    (USER, USER),
-    (ADMIN, ADMIN),
-    (MODERATOR, MODERATOR),
+    (USER, 'Пользователь'),
+    (ADMIN, 'Администратор'),
+    (MODERATOR, 'Модератор'),
 ]
+# ROLE_CHOICES = [
+#     (USER, USER),
+#     (ADMIN, ADMIN),
+#     (MODERATOR, MODERATOR),
+# ]
 
 
 class User(AbstractUser):
     username = models.CharField(
         'ник', validators=(validate_username,),
-        max_length=150, unique=True,
-        blank=False, null=False)
+        max_length=150, unique=True)
     email = models.EmailField(
         'электронная почта',
         max_length=254,
-        unique=True, blank=False, null=False)
+        unique=True)
     role = models.CharField(
         'роль', max_length=20,
         choices=ROLE_CHOICES,
@@ -39,7 +45,7 @@ class User(AbstractUser):
         'фамилия', max_length=150, blank=True)
     confirmation_code = models.CharField(
         'код подтверждения', max_length=255,
-        null=True, blank=False, default='XXXX')
+        default='XXXX')
 
     @property
     def is_user(self):
@@ -108,9 +114,9 @@ class Title(models.Model):
     """Класс произведений."""
 
     name = models.CharField('произведение', max_length=256,)
-    year = models.IntegerField('год выпуска', validators=(validate_year,))
-    description = models.CharField('описание', max_length=500,
-                                   null=True, blank=True)
+    year = models.PositiveSmallIntegerField(
+        'год выпуска', validators=(validate_year,))
+    description = models.CharField('описание', max_length=500, blank=True)
     genre = models.ManyToManyField(
         Genre,
         verbose_name='жанр',
@@ -125,7 +131,7 @@ class Title(models.Model):
     )
 
     class Meta:
-        ordering = ('-name',)
+        ordering = ('name',)
         verbose_name = 'произведение'
         verbose_name_plural = 'произведения'
 
@@ -176,8 +182,8 @@ class Review(models.Model):
     score = models.PositiveSmallIntegerField(
         verbose_name='Рейтинг',
         validators=[
-            MinValueValidator(1, 'Только значения от 1 до 10'),
-            MaxValueValidator(10, 'Только значения от 1 до 10')
+            MinValueValidator(MINVALUE, 'Только значения от 1 до 10'),
+            MaxValueValidator(MAXVALUE, 'Только значения от 1 до 10')
         ]
     )
     pub_date = models.DateTimeField(
@@ -189,7 +195,7 @@ class Review(models.Model):
     class Meta:
         verbose_name = 'Отзыв'
         verbose_name_plural = 'Отзывы'
-        ordering = ['-pub_date']
+        ordering = ('-pub_date',)
         constraints = [
             models.UniqueConstraint(
                 fields=['title', 'author'],
@@ -227,7 +233,7 @@ class Comment(models.Model):
     class Meta:
         verbose_name = 'Комментарий'
         verbose_name_plural = 'Комментарии'
-        ordering = ['-pub_date']
+        ordering = ('-pub_date',)
 
     def __str__(self):
         return self.text[settings.NUMBER_OF_CHAR]
