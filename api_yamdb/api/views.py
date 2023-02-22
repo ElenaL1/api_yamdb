@@ -20,7 +20,7 @@ from .permissions import (AdminModeratorAuthorPermission, IsAdminOnly,
 from .serializers import (CategorySerializer, CommentSerializer,
                           GenreSerializer, GetTokenSerializer,
                           NotAdminSerializer, ReviewSerializer,
-                          RevScoreTitleSerializer, SignUpSerializer,
+                          SignUpSerializer, TitleCreateSerializer,
                           TitleSerializer, UsersSerializer)
 
 
@@ -45,7 +45,8 @@ class GenreViewSet(CreateListDestroyViewSet):
 
 
 class TitleViewSet(viewsets.ModelViewSet):
-    queryset = Title.objects.all().annotate(Avg("reviews__score"))
+    queryset = Title.objects.all().annotate(Avg("reviews__score")
+                                            ).order_by("name")
     permission_classes = (IsAdminOrReadOnly,)
     filter_backends = (DjangoFilterBackend, filters.SearchFilter,)
     filterset_class = TitlesFilter
@@ -54,8 +55,8 @@ class TitleViewSet(viewsets.ModelViewSet):
 
     def get_serializer_class(self):
         if self.action in ("retrieve", "list"):
-            return RevScoreTitleSerializer
-        return TitleSerializer
+            return TitleSerializer
+        return TitleCreateSerializer
 
 
 class ReviewViewSet(viewsets.ModelViewSet):

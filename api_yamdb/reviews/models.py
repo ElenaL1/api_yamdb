@@ -15,10 +15,15 @@ MINVALUE = 1
 MAXVALUE = 10
 
 ROLE_CHOICES = [
-    (USER, USER),
-    (ADMIN, ADMIN),
-    (MODERATOR, MODERATOR),
+    (USER, 'Пользователь'),
+    (ADMIN, 'Администратор'),
+    (MODERATOR, 'Модератор'),
 ]
+# ROLE_CHOICES = [
+#     (USER, USER),
+#     (ADMIN, ADMIN),
+#     (MODERATOR, MODERATOR),
+# ]
 
 
 class User(AbstractUser):
