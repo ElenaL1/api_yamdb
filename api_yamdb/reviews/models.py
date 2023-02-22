@@ -19,11 +19,6 @@ ROLE_CHOICES = [
     (ADMIN, 'Администратор'),
     (MODERATOR, 'Модератор'),
 ]
-# ROLE_CHOICES = [
-#     (USER, USER),
-#     (ADMIN, ADMIN),
-#     (MODERATOR, MODERATOR),
-# ]
 
 
 class User(AbstractUser):
