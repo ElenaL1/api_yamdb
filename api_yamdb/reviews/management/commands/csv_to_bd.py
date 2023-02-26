@@ -28,6 +28,8 @@ class Command(BaseCommand):
             if csv_file == 'titles.csv':
                 data.insert(2, 'description', None)
                 data.rename(columns={'category': 'category_id'}, inplace=True)
+            if csv_file == 'comments.csv' or csv_file == 'review.csv':
+                data.rename(columns={'author': 'author_id'}, inplace=True)
             engine = create_engine('sqlite:///db.sqlite3')
             data.to_sql(model._meta.db_table, if_exists='replace',
                         con=engine, index=False)

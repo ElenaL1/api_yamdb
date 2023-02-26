@@ -3,6 +3,8 @@ import re
 
 from django.core.exceptions import ValidationError
 
+MINYEAR = 1945
+
 
 def validate_username(value):
     if value == 'me':
@@ -10,9 +12,9 @@ def validate_username(value):
             ('Имя пользователя не может быть <me>.'),
             params={'value': value},
         )
-    if re.search(r'^[a-zA-Z][a-zA-Z0-9-_\.]{1,20}$', value) is None:
+    if re.search(r'^[\w.@+-]{1,150}$', value) is None:
         raise ValidationError(
-            (f'Не допустимые символы <{value}> в нике.'),
+            ('Не допустимые символы в нике.'),
             params={'value': value},
         )
 
@@ -21,5 +23,20 @@ def validate_year(value):
     if value > timezone.now().year:
         raise ValidationError(
             ('Год %(value)s больше текущего!'),
+            params={'value': value},
+        )
+
+    if value < MINYEAR:
+        raise ValidationError(
+            ('%(value)s - некорректное значение года! (значение должно быть'
+                ' больше 1945г.)'),
+            params={'value': value},
+        )
+
+
+def validate_genre(value):
+    if not value:
+        raise ValidationError(
+            ('Поле жанр не должно быть пустым'),
             params={'value': value},
         )

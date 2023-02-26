@@ -136,4 +136,4 @@ EMAIL_ADMIN = 'Admin@admin.com'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
-NUMBER_OF_CHAR = 15
+NUMBER_OF_CHAR = 150

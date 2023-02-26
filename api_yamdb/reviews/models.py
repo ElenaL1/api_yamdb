@@ -6,7 +6,7 @@ from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
-from .validators import validate_username, validate_year
+from .validators import validate_username, validate_year, validate_genre
 
 USER = 'user'
 ADMIN = 'admin'
@@ -116,7 +116,8 @@ class Title(models.Model):
         Genre,
         verbose_name='жанр',
         related_name='title',
-        through='GenreTitle')
+        through='GenreTitle',
+        validators=(validate_genre,))
     category = models.ForeignKey(
         Category,
         on_delete=models.SET_NULL,
