@@ -19,9 +19,9 @@ from .permissions import (AdminModeratorAuthorPermission, IsAdminOnly,
                           IsAdminOrReadOnly)
 from .serializers import (CategorySerializer, CommentSerializer,
                           GenreSerializer, GetTokenSerializer,
-                          NotAdminSerializer, ReviewSerializer,
-                          SignUpSerializer, TitleCreateSerializer,
-                          TitleSerializer, UsersSerializer)
+                          TitleCreateSerializer, NotAdminSerializer,
+                          ReviewSerializer, SignUpSerializer, TitleSerializer,
+                          UsersSerializer)
 
 
 class CategoryViewSet(CreateListDestroyViewSet):
@@ -45,8 +45,7 @@ class GenreViewSet(CreateListDestroyViewSet):
 
 
 class TitleViewSet(viewsets.ModelViewSet):
-    queryset = Title.objects.all().annotate(Avg("reviews__score")
-                                            ).order_by("name")
+    queryset = Title.objects.all().annotate(Avg("reviews__score"))
     permission_classes = (IsAdminOrReadOnly,)
     filter_backends = (DjangoFilterBackend, filters.SearchFilter,)
     filterset_class = TitlesFilter
@@ -65,7 +64,6 @@ class ReviewViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         title = get_object_or_404(Title, pk=self.kwargs.get("title_id"))
-
         return title.reviews.all()
 
     def perform_create(self, serializer):
@@ -92,7 +90,7 @@ class CommentViewSet(viewsets.ModelViewSet):
 class UsersViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UsersSerializer
-    permission_classes = (IsAuthenticated, IsAdminOnly,)
+    permission_classes = (IsAdminOnly,)
     lookup_field = 'username'
     filter_backends = (SearchFilter, )
     search_fields = ('username', )
@@ -147,7 +145,7 @@ class APIGetToken(APIView):
         if data.get('confirmation_code') == user.confirmation_code:
             token = RefreshToken.for_user(user).access_token
             return Response({'token': str(token)},
-                            status=status.HTTP_201_CREATED)
+                            status=status.HTTP_200_OK)
         return Response(
             {'confirmation_code': 'Неверный код подтверждения!'},
             status=status.HTTP_400_BAD_REQUEST)

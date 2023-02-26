@@ -116,7 +116,8 @@ class Title(models.Model):
         Genre,
         verbose_name='жанр',
         related_name='title',
-        through='GenreTitle')
+        through='GenreTitle'
+    )
     category = models.ForeignKey(
         Category,
         on_delete=models.SET_NULL,
@@ -199,7 +200,7 @@ class Review(models.Model):
         ]
 
     def __str__(self):
-        return self.text[settings.NUMBER_OF_CHAR]
+        return self.text[:settings.NUMBER_OF_CHAR]
 
 
 class Comment(models.Model):
@@ -231,4 +232,4 @@ class Comment(models.Model):
         ordering = ('-pub_date',)
 
     def __str__(self):
-        return self.text[settings.NUMBER_OF_CHAR]
+        return self.text[:settings.NUMBER_OF_CHAR]
