@@ -2,7 +2,9 @@ from rest_framework.permissions import SAFE_METHODS, BasePermission
 
 
 class IsAdminOnly(BasePermission):
-    """ Доступ только у пользователя с ролью admin или админа Джанго."""
+    """
+    Доступ только у пользователя с ролью администратор или суперпользователь.
+    """
 
     def has_permission(self, request, view):
         return (request.user.is_authenticated and request.user.is_admin
@@ -11,8 +13,9 @@ class IsAdminOnly(BasePermission):
 
 class IsAdminOrReadOnly(BasePermission):
     """
-    Доступ только у авторизованнорго пользователя
-    с ролью admin или админа Джанго
+    Разрешает анонимному пользователю только безопасные запросы.
+    Полный доступ у авторизованнорго пользователя с ролью
+    администратор.
     """
     message = 'Доступ только у администратора.'
 
@@ -25,8 +28,8 @@ class AdminModeratorAuthorPermission(BasePermission):
     """
     Разрешает анонимному пользователю только безопасные запросы.
     Все остальные запросы разрешаются авторизованному пользователю.
-    Доступ к объекту имеют суперпользователь, админ с ролью admin
-    или moderator, а также автор объекта.
+    Доступ к объекту имеют пользователи с ролью администратор,
+    суперпользователь или модератор, а также автор объекта.
     """
     def has_permission(self, request, view):
         return (

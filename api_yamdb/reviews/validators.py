@@ -32,11 +32,3 @@ def validate_year(value):
                 ' больше 1945г.)'),
             params={'value': value},
         )
-
-
-def validate_genre(value):
-    if not value:
-        raise ValidationError(
-            ('Поле жанр не должно быть пустым'),
-            params={'value': value},
-        )
