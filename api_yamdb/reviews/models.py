@@ -6,7 +6,7 @@ from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
-from .validators import validate_username, validate_year
+from .validators import validate_username, validate_year, validate_genre
 
 USER = 'user'
 ADMIN = 'admin'
@@ -19,11 +19,6 @@ ROLE_CHOICES = [
     (ADMIN, 'Администратор'),
     (MODERATOR, 'Модератор'),
 ]
-# ROLE_CHOICES = [
-#     (USER, USER),
-#     (ADMIN, ADMIN),
-#     (MODERATOR, MODERATOR),
-# ]
 
 
 class User(AbstractUser):
@@ -121,7 +116,8 @@ class Title(models.Model):
         Genre,
         verbose_name='жанр',
         related_name='title',
-        through='GenreTitle')
+        through='GenreTitle',
+        validators=(validate_genre,))
     category = models.ForeignKey(
         Category,
         on_delete=models.SET_NULL,
@@ -204,7 +200,7 @@ class Review(models.Model):
         ]
 
     def __str__(self):
-        return self.text[settings.NUMBER_OF_CHAR]
+        return self.text[:settings.NUMBER_OF_CHAR]
 
 
 class Comment(models.Model):
@@ -236,4 +232,4 @@ class Comment(models.Model):
         ordering = ('-pub_date',)
 
     def __str__(self):
-        return self.text[settings.NUMBER_OF_CHAR]
+        return self.text[:settings.NUMBER_OF_CHAR]
