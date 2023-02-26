@@ -199,7 +199,7 @@ class Review(models.Model):
         ]
 
     def __str__(self):
-        return self.text[settings.NUMBER_OF_CHAR]
+        return self.text[:settings.NUMBER_OF_CHAR]
 
 
 class Comment(models.Model):
@@ -231,4 +231,4 @@ class Comment(models.Model):
         ordering = ('-pub_date',)
 
     def __str__(self):
-        return self.text[settings.NUMBER_OF_CHAR]
+        return self.text[:settings.NUMBER_OF_CHAR]
