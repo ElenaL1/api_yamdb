@@ -41,6 +41,13 @@ class TitleCreateSerializer(serializers.ModelSerializer):
         required=True
     )
 
+    def validate_genre(self, attrs):
+        if not attrs:
+            raise serializers.ValidationError(
+                'Поле жанр не может быть пустым'
+            )
+        return attrs
+
     class Meta:
         fields = ('id', 'name', 'year', 'description', 'genre', 'category')
         model = Title
