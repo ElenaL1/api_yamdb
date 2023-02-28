@@ -37,8 +37,7 @@ class TitleCreateSerializer(serializers.ModelSerializer):
     genre = serializers.SlugRelatedField(
         queryset=Genre.objects.all(),
         slug_field='slug',
-        many=True,
-        required=True
+        many=True
     )
 
     def validate_genre(self, attrs):
