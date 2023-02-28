@@ -28,7 +28,7 @@ def validate_year(value):
 
     if value < MINYEAR:
         raise ValidationError(
-            ('%(value)s - некорректное значение года! (значение должно быть'
-                ' больше 1945г.)'),
+            ('%(value)s - некорректное значение года! (должно быть'
+                f' больше {MINYEAR} г.)'),
             params={'value': value},
         )
